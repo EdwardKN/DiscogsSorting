@@ -34,11 +34,18 @@ function setOriginalRelease(i){
 
         
 
-            getData(collection[i].basic_information.master_url+"?token=aEagSeDueOMQaHwpUGTcFPPnWaCTZkSkpnizczvt",function(callback2){
+            //getData(collection[i].basic_information.master_url+"?token=aEagSeDueOMQaHwpUGTcFPPnWaCTZkSkpnizczvt",function(callback2){
                 if(collection[i].basic_information.originalRelease === undefined){
-                    if(i<collection.length && collection[i].basic_information.originalRelease === undefined){
+                     
+                    let callback2 = {year:0};
 
-                        if(callback2.year === 0){
+                    try {
+                        callback2 = {year:Number(collection[i].notes[0].value)}
+                      } catch(e) {
+                        callback2 = 0;
+                      }
+                    if(i<collection.length && collection[i].basic_information.originalRelease === undefined){
+                        if(callback2.year === 0 || callback2.year === undefined){
                             collection[i].basic_information.originalRelease = collection[i].basic_information.year;
                         }else{
                             collection[i].basic_information.originalRelease = callback2.year;
@@ -48,14 +55,14 @@ function setOriginalRelease(i){
                             addItems(i);
                             setOriginalRelease(i+1)
                             
-                        }, 1100);
+                        }, 10);
                     }else if(i == collection.length){
                         loaded.innerText = "";
                     }
                 }
                 
 
-            })
+            //})
         }else{
             collection[i].basic_information.originalRelease = collection[i].basic_information.year;
             console.log("hej")
