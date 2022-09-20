@@ -8,22 +8,22 @@
     <title>Document</title>
 
     <style>
-        table, th, td {
+        table, th, td{
           border:1px solid black;
+        }
+        a, input, select{
+          width: 100%;
+          display: block;
         }
     </style>
 
+
 </head>
 <body>
-    <button id="load" type="button" onclick="load()">Load</button>
-    <h1 id="loaded"></h1>
+  <button id="load" type="button" onclick="load()">Refresh</button>
+  <h1 id="loaded"></h1>
     <table id="collection" style="width:100%">
-        <tr>
-          <th onclick="sortTable(0)">Id</th>
-          <th onclick="sortTable(1)">Artist</th>
-          <th onclick="sortTable(2)">Titel</th>
-          <th onclick="sortTable(3)">År</th>
-        </tr>
+
     </table>
 
     <script src="script.js"></script>
