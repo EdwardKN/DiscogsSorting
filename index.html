@@ -15,12 +15,22 @@
           width: 100%;
           display: block;
         }
+        #token{
+          width: 40%;
+        }
+        #username{
+          width: 15%;
+        }
     </style>
 
 
 </head>
 <body>
-  <button id="load" type="button" onclick="load()">Refresh</button>
+  
+  <button id="reload" type="button" onclick="reload()">Refresh</button>
+  <input id="username" placeholder="Username" type="text" >
+  <input id="token" placeholder="Token" type="text" >
+
   <h1 id="loaded"></h1>
     <table id="collection" style="width:100%">
 
