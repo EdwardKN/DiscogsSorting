@@ -84,7 +84,6 @@ function load(){
       
         httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/folders/0/releases?page=1&per_page=5000&token="+document.getElementById('token').value,function(callback){
                 collection = callback.releases;
-                loaded.innerText = `Laddat: ${0} av ${collection.length}`
     
                 setOriginalRelease(0)
             })
@@ -123,11 +122,9 @@ function setOriginalRelease(i){
                             loaded.innerText = "";
                         }
 
-                        setTimeout(() => {
-                            addItems(i);
-                            setOriginalRelease(i+1)
+                        addItems(i);
+                        setOriginalRelease(i+1)
                             
-                        }, 1);
                       } catch(e) {
                         httpRequest(collection[i].basic_information.master_url+"?token="+document.getElementById('token').value,function(callback2){
                             if(i<collection.length && collection[i].basic_information.originalRelease === undefined){
@@ -140,7 +137,7 @@ function setOriginalRelease(i){
                                     addItems(i);
                                     setOriginalRelease(i+1)
                                     
-                                }, 10);
+                                }, 2000);
                                 
                             }else if(i == collection.length){
                                 loaded.innerText = "";
@@ -155,11 +152,8 @@ function setOriginalRelease(i){
             //})
         }else{
             collection[i].basic_information.originalRelease = Number(collection[i].basic_information.year);
-            setTimeout(() => {
                 addItems(i);
-                setOriginalRelease(i+1)
-                
-            }, 1);
+                setOriginalRelease(i+1);
         }
     }
 }
@@ -181,7 +175,11 @@ function addItems(i){
     id.innerText = i; 
     title.innerText = collection[i].basic_information.title; 
     artist.innerText = collection[i].basic_information.artists[0].name;
-    year.innerText = collection[i].basic_information.year;
+    if(collection[i].basic_information.year === 0){
+        year.innerText = "Okänt"
+    } else{
+        year.innerText = collection[i].basic_information.year;
+    }
     originalYear.innerText = collection[i].basic_information.originalRelease;
     for(g = 0;g<folders.length;g++){
         if(collection[i].folder_id === folders[g].id){
@@ -222,7 +220,6 @@ function addItems(i){
 
     collectionTable.appendChild(column);
 
-    loaded.innerText = `Laddat: ${i+1} av ${collection.length}`
     if(i+1 == collection.length){
         loaded.innerText = "";
         save();
@@ -245,7 +242,7 @@ function sortTable(n) {
 
         x = rows[i].getElementsByTagName("TD")[n];
         y = rows[i + 1].getElementsByTagName("TD")[n];
-        if(n === 1 || n === 2 || n === 5 || n === 6 || n === 7){
+        if(n === 1 || n === 2 || n === 3 || n === 4 || n === 5 || n === 6 || n === 7){
             if (dir == "asc") {
                 if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                     shouldSwitch= true;
@@ -316,8 +313,8 @@ function reloadTable(event) {
             if(JSON.stringify(i).includes(document.getElementById("idSearch").value) &&
                 collection[i].basic_information.title.toLowerCase().includes(document.getElementById("titleSearch").value.toLowerCase()) &&
                 collection[i].basic_information.artists[0].name.toLowerCase().includes(document.getElementById("artistSearch").value.toLowerCase()) && 
-                JSON.stringify(collection[i].basic_information.year).includes(document.getElementById("yearSearch").value) &&
-                JSON.stringify(collection[i].basic_information.originalRelease).includes(document.getElementById("originalYearSearch").value) &&
+                JSON.stringify(collection[i].basic_information.year).startsWith(document.getElementById("yearSearch").value) &&
+                JSON.stringify(collection[i].basic_information.originalRelease).startsWith(document.getElementById("originalYearSearch").value) &&
                 JSON.stringify(collection[i].basic_information.styles).toLowerCase().includes(document.getElementById("genreSearch").value.toLowerCase()
                 )
             ){
@@ -352,6 +349,15 @@ function addFirstColumn(lastSearch){
     folder.innerText = "Mapp";
     genre.innerText = "Genre";
     label.innerText = "Label";
+
+    id.setAttribute("id","rad1Text")
+    title.setAttribute("id","rad1Text")
+    artist.setAttribute("id","rad1Text")
+    year.setAttribute("id","rad1Text")
+    originalYear.setAttribute("id","rad1Text")
+    folder.setAttribute("id","rad1Text")
+    genre.setAttribute("id","rad1Text")
+    label.setAttribute("id","rad1Text")
 
     id.setAttribute("onclick","sortTable(0)")
     title.setAttribute("onclick","sortTable(1)")
