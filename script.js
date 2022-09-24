@@ -318,7 +318,7 @@ function sortTable(n) {
     }
   }
 
-async function reloadTable(event) {
+async function reloadTable(onlyShow) {
     let noteStates = [];
     for(let x=0;x<notes.length;x++){
         noteStates.push(document.getElementById("noteSearch"+x).value)
@@ -343,12 +343,14 @@ async function reloadTable(event) {
 
     collectionTable.innerHTML = "";
     addFirstColumn(lastSearch);
+    let onlyShowTrue = false;
 
     for(i=0;i<collection.length;i++){
-        var notesGood = true;
+        
 
-        if(collection[i].folder_id == selectedFolder || selectedFolder === "0"){
-            
+        if(JSON.stringify(collection[i].folder_id) === selectedFolder || selectedFolder === "0"){
+            var notesGood = true;
+
             if(collection[i].basic_information.title.toLowerCase().includes(document.getElementById("titleSearch").value.toLowerCase()) &&
                 collection[i].basic_information.artists[0].name.toLowerCase().includes(document.getElementById("artistSearch").value.toLowerCase()) && 
                 JSON.stringify(collection[i].basic_information.year).startsWith(document.getElementById("yearSearch").value) &&
@@ -380,20 +382,37 @@ async function reloadTable(event) {
                             
                         }   
                         if(notesGood == true){
-                            for(i = 0; i < collection.length;i++){
-                                await sleep(1)
+                            await sleep(1)
+
+                            if(onlyShow !== undefined){
+
+                                if(onlyShow === i){
+                                    i = collection.length;
+                                    addItems(onlyShow)
+                                    onlyShowTrue = true;
+                                } else{
+
+
+                                }
+                                
+                            }else{
                                 addItems(i)
                             }
+                            
                         }
                         
                     }
                 }catch(e){
                 }
             }
+        }else{
+            notesGood = false;
         }
     }
+    if(onlyShowTrue == false && onlyShow !== undefined){
+        randomize();
+    }
 
-    
 
 }
   
@@ -488,12 +507,12 @@ function addFirstColumn(lastSearch){
     genreSearch.setAttribute("id","genreSearch")
     labelSearch.setAttribute("id","labelSearch")
 
-    titleSearch.setAttribute("onchange","reloadTable.call(this, event)")
-    artistSearch.setAttribute("onchange","reloadTable.call(this, event)")
-    folderSearch.setAttribute("onchange","reloadTable.call(this, event)")
-    yearSearch.setAttribute("onchange","reloadTable.call(this, event)")
-    genreSearch.setAttribute("onchange","reloadTable.call(this, event)")
-    labelSearch.setAttribute("onchange","reloadTable.call(this, event)")
+    titleSearch.setAttribute("onchange","reloadTable()")
+    artistSearch.setAttribute("onchange","reloadTable()")
+    folderSearch.setAttribute("onchange","reloadTable()")
+    yearSearch.setAttribute("onchange","reloadTable()")
+    genreSearch.setAttribute("onchange","reloadTable()")
+    labelSearch.setAttribute("onchange","reloadTable()")
 
     titleSearch.setAttribute("placeholder","Sök")
     artistSearch.setAttribute("placeholder","Sök")
@@ -563,7 +582,7 @@ function addFirstColumn(lastSearch){
         noteSearch.setAttribute("type","text")
         noteSearch.setAttribute("id","noteSearch"+n)
         noteSearch.className = "search"
-        noteSearch.setAttribute("onchange","reloadTable.call(this, event)")
+        noteSearch.setAttribute("onchange","reloadTable()")
 
         if(lastSearch.notes === undefined){
             if(notes[n].type !== "textarea"){
@@ -586,3 +605,11 @@ function addFirstColumn(lastSearch){
 }
 
 
+function randomize(){
+    let integer = Math.floor(Math.random() * collection.length);
+
+    let selected = collection[integer];
+
+    reloadTable(integer);
+
+}
