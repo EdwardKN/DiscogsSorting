@@ -100,7 +100,6 @@ function load(){
     loaded.innerText = `Laddar...`
     httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/fields?token="+document.getElementById('token').value,function(c){
         notes = c.fields;
-        console.log(notes);
         collectionTable.innerHTML = "";
 
         addFirstColumn({
@@ -130,7 +129,6 @@ function load(){
             httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+`/collection/folders/0/releases?page=${i+1}&per_page=500&token=`+document.getElementById('token').value,function(callback){
                 let newColection = collection.concat(callback.releases);
                 collection = newColection;
-                console.log(callback)
                 if(collection.length === callback.pagination.items){
                     addAllItems();
                 }
@@ -144,11 +142,17 @@ function load(){
     })
     
 }
-function addAllItems(){
+
+const addAllItems = async () => {
     for(i = 0; i < collection.length;i++){
+        await sleep(1)
         addItems(i)
     }
-}
+  }
+
+const sleep = (time) => {
+    return new Promise((resolve) => setTimeout(resolve, time))
+  }
 
 function addItems(i){
     let column = document.createElement("tr");
@@ -161,9 +165,14 @@ function addItems(i){
     let folder = document.createElement("td");
     let genre = document.createElement("td");
     let label = document.createElement("td");
-    
 
-    id.innerText = i; 
+    let idImage = document.createElement("img")
+    idImage.setAttribute("onclick","this.classList.toggle('active');")
+
+    idImage.src = collection[i].basic_information.cover_image;
+    idImage.style.height = '100px';
+    idImage.style.width = '100px';
+
     title.innerText = collection[i].basic_information.title; 
     artist.innerText = collection[i].basic_information.artists[0].name;
     if(collection[i].basic_information.year === 0){
@@ -197,6 +206,10 @@ function addItems(i){
     title2.appendChild(title);
 
     artist2.appendChild(artist);
+
+    id.appendChild(idImage);
+
+
 
     column.appendChild(id);
     column.appendChild(artist2);
@@ -305,12 +318,11 @@ function sortTable(n) {
     }
   }
 
-function reloadTable(event) {
+async function reloadTable(event) {
     let noteStates = [];
     for(let x=0;x<notes.length;x++){
         noteStates.push(document.getElementById("noteSearch"+x).value)
     }
-    console.log(noteStates);
     if(document.getElementById("folders").value === ""){
         document.getElementById("folders").value = "0"
         selectedFolder = "0";
@@ -320,7 +332,6 @@ function reloadTable(event) {
     }
 
     let lastSearch = {
-        id:document.getElementById("idSearch").value,
         title:document.getElementById("titleSearch").value,
         artist:document.getElementById("artistSearch").value,
         year:document.getElementById("yearSearch").value,
@@ -338,8 +349,7 @@ function reloadTable(event) {
 
         if(collection[i].folder_id == selectedFolder || selectedFolder === "0"){
             
-            if(JSON.stringify(i).includes(document.getElementById("idSearch").value) &&
-                collection[i].basic_information.title.toLowerCase().includes(document.getElementById("titleSearch").value.toLowerCase()) &&
+            if(collection[i].basic_information.title.toLowerCase().includes(document.getElementById("titleSearch").value.toLowerCase()) &&
                 collection[i].basic_information.artists[0].name.toLowerCase().includes(document.getElementById("artistSearch").value.toLowerCase()) && 
                 JSON.stringify(collection[i].basic_information.year).startsWith(document.getElementById("yearSearch").value) &&
                 JSON.stringify(collection[i].basic_information.styles).toLowerCase().includes(document.getElementById("genreSearch").value.toLowerCase()
@@ -370,7 +380,10 @@ function reloadTable(event) {
                             
                         }   
                         if(notesGood == true){
-                            addItems(i);
+                            for(i = 0; i < collection.length;i++){
+                                await sleep(1)
+                                addItems(i)
+                            }
                         }
                         
                     }
@@ -388,7 +401,7 @@ function reloadTable(event) {
 function addFirstColumn(lastSearch){
 
     let column = document.createElement("tr");
-    let id = document.createElement("td");
+    let albumCover = document.createElement("td");
     let title = document.createElement("td");
     let artist = document.createElement("td");
     let year = document.createElement("td");
@@ -398,7 +411,7 @@ function addFirstColumn(lastSearch){
 
 
 
-    id.innerText = "Id"; 
+    albumCover.innerText = "Skivomslag"; 
     title.innerText = "Titel"; 
     artist.innerText = "Artist";
     year.innerText = "År";
@@ -406,7 +419,7 @@ function addFirstColumn(lastSearch){
     genre.innerText = "Genre";
     label.innerText = "Label";
 
-    id.setAttribute("id","rad1Text")
+    albumCover.setAttribute("id","rad1Text")
     title.setAttribute("id","rad1Text")
     artist.setAttribute("id","rad1Text")
     year.setAttribute("id","rad1Text")
@@ -414,7 +427,6 @@ function addFirstColumn(lastSearch){
     genre.setAttribute("id","rad1Text")
     label.setAttribute("id","rad1Text")
 
-    id.setAttribute("onclick","sortTable(0)")
     title.setAttribute("onclick","sortTable(2)")
     artist.setAttribute("onclick","sortTable(1)")
     year.setAttribute("onclick","sortTable(3)")
@@ -422,7 +434,7 @@ function addFirstColumn(lastSearch){
     genre.setAttribute("onclick","sortTable(6)")
     label.setAttribute("onclick","sortTable(7)")
     
-    column.appendChild(id);
+    column.appendChild(albumCover);
     column.appendChild(artist);
     column.appendChild(title);
     column.appendChild(year);
@@ -447,7 +459,6 @@ function addFirstColumn(lastSearch){
 
     let column2 = document.createElement("tr");
 
-    let idSearch = document.createElement("input");
     let titleSearch = document.createElement("input");
     let artistSearch = document.createElement("input");
     let yearSearch = document.createElement("input");
@@ -455,7 +466,8 @@ function addFirstColumn(lastSearch){
     let genreSearch = document.createElement("input");
     let labelSearch = document.createElement("input");
 
-    let id2 = document.createElement("td");
+    let albumCover2 = document.createElement("td");
+
     let title2 = document.createElement("td");
     let artist2 = document.createElement("td");
     let year2 = document.createElement("td");
@@ -463,14 +475,12 @@ function addFirstColumn(lastSearch){
     let genre2 = document.createElement("td");
     let label2 = document.createElement("td");
 
-    idSearch.setAttribute("type","text")
     titleSearch.setAttribute("type","text")
     artistSearch.setAttribute("type","text")
     yearSearch.setAttribute("type","text")
     genreSearch.setAttribute("type","text")
     labelSearch.setAttribute("type","text")
 
-    idSearch.setAttribute("id","idSearch")
     titleSearch.setAttribute("id","titleSearch")
     artistSearch.setAttribute("id","artistSearch")
     yearSearch.setAttribute("id","yearSearch")
@@ -478,7 +488,6 @@ function addFirstColumn(lastSearch){
     genreSearch.setAttribute("id","genreSearch")
     labelSearch.setAttribute("id","labelSearch")
 
-    idSearch.setAttribute("onchange","reloadTable.call(this, event)")
     titleSearch.setAttribute("onchange","reloadTable.call(this, event)")
     artistSearch.setAttribute("onchange","reloadTable.call(this, event)")
     folderSearch.setAttribute("onchange","reloadTable.call(this, event)")
@@ -486,14 +495,12 @@ function addFirstColumn(lastSearch){
     genreSearch.setAttribute("onchange","reloadTable.call(this, event)")
     labelSearch.setAttribute("onchange","reloadTable.call(this, event)")
 
-    idSearch.setAttribute("placeholder","Sök")
     titleSearch.setAttribute("placeholder","Sök")
     artistSearch.setAttribute("placeholder","Sök")
     yearSearch.setAttribute("placeholder","Sök")
     genreSearch.setAttribute("placeholder","Sök")
     labelSearch.setAttribute("placeholder","Sök")
 
-    idSearch.value = lastSearch.id 
     titleSearch.value = lastSearch.title
     artistSearch.value = lastSearch.artist
     yearSearch.value = lastSearch.year    
@@ -515,7 +522,6 @@ function addFirstColumn(lastSearch){
     folderSearch.value = lastSearch.folder
 
 
-    id2.appendChild(idSearch);
     artist2.appendChild(artistSearch);
     title2.appendChild(titleSearch);
     year2.appendChild(yearSearch);
@@ -523,7 +529,7 @@ function addFirstColumn(lastSearch){
     genre2.appendChild(genreSearch);
     label2.appendChild(labelSearch);
 
-    column2.appendChild(id2);
+    column2.appendChild(albumCover2);
     column2.appendChild(artist2);
     column2.appendChild(title2);
     column2.appendChild(year2);
