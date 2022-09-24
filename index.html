@@ -8,10 +8,8 @@
     <title>Document</title>
 
     <style>
+        
 
-        a, select{
-          width: 100%;
-        }
         #username,#token{
           border-color: black;
         }
@@ -21,10 +19,27 @@
         #username{
           width: 15%;
         }
-        #rad1Text,#idSearch,#artistSearch,#titleSearch,#yearSearch,#originalYearSearch,#folders,#genreSearch,#labelSearch{
+        #idSearch,#artistSearch,#titleSearch,#yearSearch,#originalYearSearch,#folders,#genreSearch,#labelSearch,#noteSearch{
           background-color: #E6E6E6;
           border: 0px;
-          width:auto;
+          width: 95%;
+
+        }
+        #rad1Text{
+          background-color: #E6E6E6;
+          border: 0px;
+          width: auto;
+        }
+        table { 
+          table-layout: auto;
+          width: 100%;    
+        }
+
+        .search{
+          background-color: #E6E6E6;
+          border: 0px;
+          width: 95%;
+
         }
         tr:nth-child(even) {background-color: #E6E6E6;}
 
@@ -34,7 +49,7 @@
 </head>
 <body>
   
-  <button id="reload" type="button" onmousedown="reload()">Refresh</button>
+  <button id="reload" type="button" onmouseup="reload()">Refresh</button>
   <input id="username" placeholder="Username" type="text" >
   <input id="token" placeholder="Token" type="text" >
 
