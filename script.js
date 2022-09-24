@@ -382,7 +382,9 @@ async function reloadTable(onlyShow) {
                             
                         }   
                         if(notesGood == true){
-                            await sleep(1)
+                            if(i % 1000 == 0){
+                                await sleep(1)
+                            }
 
                             if(onlyShow !== undefined){
 
@@ -507,12 +509,12 @@ function addFirstColumn(lastSearch){
     genreSearch.setAttribute("id","genreSearch")
     labelSearch.setAttribute("id","labelSearch")
 
-    titleSearch.setAttribute("onchange","reloadTable()")
-    artistSearch.setAttribute("onchange","reloadTable()")
-    folderSearch.setAttribute("onchange","reloadTable()")
-    yearSearch.setAttribute("onchange","reloadTable()")
-    genreSearch.setAttribute("onchange","reloadTable()")
-    labelSearch.setAttribute("onchange","reloadTable()")
+    titleSearch.setAttribute("onchange","removeRandomDisc()")
+    artistSearch.setAttribute("onchange","removeRandomDisc()")
+    folderSearch.setAttribute("onchange","removeRandomDisc()")
+    yearSearch.setAttribute("onchange","removeRandomDisc()")
+    genreSearch.setAttribute("onchange","removeRandomDisc()")
+    labelSearch.setAttribute("onchange","removeRandomDisc()")
 
     titleSearch.setAttribute("placeholder","Sök")
     artistSearch.setAttribute("placeholder","Sök")
@@ -582,7 +584,7 @@ function addFirstColumn(lastSearch){
         noteSearch.setAttribute("type","text")
         noteSearch.setAttribute("id","noteSearch"+n)
         noteSearch.className = "search"
-        noteSearch.setAttribute("onchange","reloadTable()")
+        noteSearch.setAttribute("onchange","removeRandomDisc()")
 
         if(lastSearch.notes === undefined){
             if(notes[n].type !== "textarea"){
@@ -604,7 +606,11 @@ function addFirstColumn(lastSearch){
 
 }
 
-
+function getRandomDisc(){
+    randomize();
+    document.getElementById("randomize").setAttribute("onmouseup","removeRandomDisc()")
+    document.getElementById("randomize").innerText = "Ta bort slumpmässig skiva"
+}
 function randomize(){
     let integer = Math.floor(Math.random() * collection.length);
 
@@ -612,4 +618,10 @@ function randomize(){
 
     reloadTable(integer);
 
+}
+
+function removeRandomDisc(){
+    reloadTable();
+    document.getElementById("randomize").setAttribute("onmouseup","getRandomDisc()")
+    document.getElementById("randomize").innerText = "Välj slumpmässig skiva"
 }
