@@ -35,6 +35,9 @@ function loadSave(){
     document.getElementById("token").value = JSON.parse(localStorage.getItem("token"));
     selectedFolder = '0';
     notes = JSON.parse(localStorage.getItem("notes"));
+    if(notes == null){
+        notes = [];
+    }
 
     let tmpNotes = []; 
     for(i=0;i<notes.length;i++){
@@ -75,6 +78,7 @@ function httpRequest(url, callback){
 }
 
 function reload(){
+    notes = [];
     collection = [];
     folders = 1;
     selectedFolder = undefined;
