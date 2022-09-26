@@ -44,7 +44,7 @@ function loadSave(){
         if(notes[i].type === "textarea"){
             tmpNotes.push("")
         }else{
-            tmpNotes.push("All")
+            tmpNotes.push("Alla")
         }
     }
     addFirstColumn({
@@ -54,7 +54,8 @@ function loadSave(){
         year:"",
         folder:"",
         genre:"",
-        notes:tmpNotes
+        notes:tmpNotes,
+        rankSelect:"Alla"
     });
 
     reloadTable();
@@ -91,7 +92,8 @@ function reload(){
         year:"",
         folder:"",
         genre:"",
-        notes:undefined
+        notes:undefined,
+        rankSelect:"Alla"
     });
 
     load();
@@ -115,7 +117,8 @@ function load(){
             folder:"",
             genre:"",
             label:"",
-            notes:undefined
+            notes:undefined,
+            rankSelect:"Alla"
         });
     });
 
@@ -161,6 +164,7 @@ const sleep = (time) => {
 function addItems(i){
     let column = document.createElement("tr");
     let id = document.createElement("td");
+    let ranking = document.createElement("td");
     let title = document.createElement("a");
     let title2 = document.createElement("td");
     let artist = document.createElement("a");
@@ -178,6 +182,11 @@ function addItems(i){
     idImage.style.width = '100px';
 
     title.innerText = collection[i].basic_information.title; 
+    for(let y=0; y<collection[i].rating;y++){
+        
+        ranking.innerText += "★"; 
+
+    }
     artist.innerText = collection[i].basic_information.artists[0].name;
     if(collection[i].basic_information.year === 0){
         year.innerText = "Okänt"
@@ -216,6 +225,7 @@ function addItems(i){
 
 
     column.appendChild(id);
+    column.appendChild(ranking);
     column.appendChild(artist2);
     column.appendChild(title2);
     column.appendChild(year);
@@ -342,7 +352,8 @@ async function reloadTable(onlyShow) {
         folder:selectedFolder,
         genre:document.getElementById("genreSearch").value,
         label:document.getElementById("labelSearch").value,
-        notes:noteStates
+        notes:noteStates,
+        rankSelect: document.getElementById("rankSelect").value
     }
 
     collectionTable.innerHTML = "";
@@ -353,7 +364,8 @@ async function reloadTable(onlyShow) {
         
 
         if(JSON.stringify(collection[i].folder_id) === selectedFolder || selectedFolder === "0"){
-            var notesGood = true;
+            if(JSON.stringify(collection[i].rating) === document.getElementById("rankSelect").value || document.getElementById("rankSelect").value === "Alla"){
+                var notesGood = true;
 
             if(collection[i].basic_information.title.toLowerCase().includes(document.getElementById("titleSearch").value.toLowerCase()) &&
                 collection[i].basic_information.artists[0].name.toLowerCase().includes(document.getElementById("artistSearch").value.toLowerCase()) && 
@@ -369,7 +381,7 @@ async function reloadTable(onlyShow) {
 
                                 }else{
 
-                                    if(document.getElementById("noteSearch"+x).value === "All"){
+                                    if(document.getElementById("noteSearch"+x).value === "Alla"){
 
                                     }else{
 
@@ -377,7 +389,7 @@ async function reloadTable(onlyShow) {
                                     }
                                 }
                             }catch(e){
-                                if(document.getElementById("noteSearch"+x).value === "All"){
+                                if(document.getElementById("noteSearch"+x).value === "Alla"){
                                 }else{
                                     
                                     notesGood = false;
@@ -414,6 +426,7 @@ async function reloadTable(onlyShow) {
         }else{
             notesGood = false;
         }
+        }
     }
     if(onlyShowTrue == false && onlyShow !== undefined){
         randomize();
@@ -427,6 +440,7 @@ function addFirstColumn(lastSearch){
 
     let column = document.createElement("tr");
     let albumCover = document.createElement("td");
+    let ranking = document.createElement("td");
     let title = document.createElement("td");
     let artist = document.createElement("td");
     let year = document.createElement("td");
@@ -437,6 +451,7 @@ function addFirstColumn(lastSearch){
 
 
     albumCover.innerText = "Skivomslag"; 
+    ranking.innerText = "Betyg"; 
     title.innerText = "Titel"; 
     artist.innerText = "Artist";
     year.innerText = "År";
@@ -445,6 +460,7 @@ function addFirstColumn(lastSearch){
     label.innerText = "Label";
 
     albumCover.setAttribute("id","rad1Text")
+    ranking.setAttribute("id","rad1Text")
     title.setAttribute("id","rad1Text")
     artist.setAttribute("id","rad1Text")
     year.setAttribute("id","rad1Text")
@@ -452,14 +468,16 @@ function addFirstColumn(lastSearch){
     genre.setAttribute("id","rad1Text")
     label.setAttribute("id","rad1Text")
 
-    title.setAttribute("onclick","sortTable(2)")
-    artist.setAttribute("onclick","sortTable(1)")
-    year.setAttribute("onclick","sortTable(3)")
-    folder.setAttribute("onclick","sortTable(5)")
-    genre.setAttribute("onclick","sortTable(6)")
-    label.setAttribute("onclick","sortTable(7)")
+    title.setAttribute("onclick","sortTable(3)")
+    artist.setAttribute("onclick","sortTable(2)")
+    ranking.setAttribute("onclick","sortTable(1)")
+    year.setAttribute("onclick","sortTable(4)")
+    folder.setAttribute("onclick","sortTable(6)")
+    genre.setAttribute("onclick","sortTable(7)")
+    label.setAttribute("onclick","sortTable(8)")
     
     column.appendChild(albumCover);
+    column.appendChild(ranking);
     column.appendChild(artist);
     column.appendChild(title);
     column.appendChild(year);
@@ -471,7 +489,7 @@ function addFirstColumn(lastSearch){
         let noteText = document.createElement("td");
         noteText.innerText = notes[n].name;
         noteText.setAttribute("id","rad1Text")
-        noteText.setAttribute("onclick",`sortTable(${7+n})`)
+        noteText.setAttribute("onclick",`sortTable(${8+n})`)
 
         column.appendChild(noteText);
     }
@@ -488,10 +506,12 @@ function addFirstColumn(lastSearch){
     let artistSearch = document.createElement("input");
     let yearSearch = document.createElement("input");
     let folderSearch = document.createElement("select");
+    let rankSelect = document.createElement("select");
     let genreSearch = document.createElement("input");
     let labelSearch = document.createElement("input");
 
     let albumCover2 = document.createElement("td");
+    let ranking2 = document.createElement("td");
 
     let title2 = document.createElement("td");
     let artist2 = document.createElement("td");
@@ -510,12 +530,14 @@ function addFirstColumn(lastSearch){
     artistSearch.setAttribute("id","artistSearch")
     yearSearch.setAttribute("id","yearSearch")
     folderSearch.setAttribute("id","folders")
+    rankSelect.setAttribute("id","rankSelect")
     genreSearch.setAttribute("id","genreSearch")
     labelSearch.setAttribute("id","labelSearch")
 
     titleSearch.setAttribute("onchange","removeRandomDisc()")
     artistSearch.setAttribute("onchange","removeRandomDisc()")
     folderSearch.setAttribute("onchange","removeRandomDisc()")
+    rankSelect.setAttribute("onchange","removeRandomDisc()")
     yearSearch.setAttribute("onchange","removeRandomDisc()")
     genreSearch.setAttribute("onchange","removeRandomDisc()")
     labelSearch.setAttribute("onchange","removeRandomDisc()")
@@ -544,17 +566,36 @@ function addFirstColumn(lastSearch){
         folder.text = folders[i].name +"("+folders[i].count+")";
         folderSearch.appendChild(folder);
     }
+    let folderThing = document.createElement("option")
+    folderThing.value = "Alla";
+    folderThing.text = "Alla";
+    rankSelect.appendChild(folderThing);
+    for(i=0;i<6;i++){
+        let folder = document.createElement("option")
+        folder.value = i;
+        let sting = "";
+
+        for(let y = 0;y< i;y++){
+            sting += "★"; 
+        }
+        console.log(sting)
+        folder.text = sting;
+        rankSelect.appendChild(folder);
+    }
     folderSearch.value = lastSearch.folder
+    rankSelect.value = lastSearch.rankSelect;
 
 
     artist2.appendChild(artistSearch);
     title2.appendChild(titleSearch);
     year2.appendChild(yearSearch);
     folder2.appendChild(folderSearch);
+    ranking2.appendChild(rankSelect);
     genre2.appendChild(genreSearch);
     label2.appendChild(labelSearch);
 
     column2.appendChild(albumCover2);
+    column2.appendChild(ranking2);
     column2.appendChild(artist2);
     column2.appendChild(title2);
     column2.appendChild(year2);
@@ -570,8 +611,8 @@ function addFirstColumn(lastSearch){
         }else{
             noteSearch = document.createElement("select");
             let noteThing = document.createElement("option")
-            noteThing.value = "All";
-            noteThing.text = "All";
+            noteThing.value = "Alla";
+            noteThing.text = "Alla";
             noteSearch.appendChild(noteThing);
 
             for(i=0;i<notes[n].options.length;i++){
@@ -592,7 +633,7 @@ function addFirstColumn(lastSearch){
 
         if(lastSearch.notes === undefined){
             if(notes[n].type !== "textarea"){
-                noteSearch.value = "All";
+                noteSearch.value = "Alla";
             }else{
                 noteSearch.value = "";
             }
