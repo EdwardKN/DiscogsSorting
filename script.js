@@ -95,7 +95,8 @@ function reload(){
         notes:undefined,
         rankSelect:"Alla"
     });
-
+    localStorage.setItem("username",JSON.stringify(document.getElementById("username").value))
+    localStorage.setItem("token",JSON.stringify(document.getElementById("token").value))
     load();
 
 }
@@ -103,7 +104,7 @@ function reload(){
 
 
 function load(){
-    loaded.innerText = `Laddar...`
+    loaded.innerText = `Laddar...0 av ?`
     httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/fields?token="+document.getElementById('token').value,function(c){
         notes = c.fields;
         collectionTable.innerHTML = "";
