@@ -63,15 +63,20 @@ function loadSave(){
 }
 
 function httpRequest(url, callback){
+
     const http = new XMLHttpRequest();   
     http.open("GET", url);
     http.send();
     http.onreadystatechange=(e)=>{
-        if(e.currentTarget.status !== 200){
-            alert("Username, token eller nåt annat skit är fel?!")
-            window.location.reload(true)
-        }else{
-            callback(JSON.parse(http.responseText))
+
+        if(http.readyState=== 4){
+
+            if(e.currentTarget.status !== 200){
+                alert("Username, token eller nåt annat skit är fel?!")
+                window.location.reload(true)
+            }else{
+                callback(JSON.parse(http.responseText))
+            }
         }
         
     }
@@ -104,7 +109,7 @@ function reload(){
 
 
 function load(){
-    loaded.innerText = `Laddar...0 av ?`
+    loaded.innerText = `Laddar...`
     httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/fields?token="+document.getElementById('token').value,function(c){
         notes = c.fields;
         collectionTable.innerHTML = "";
@@ -125,6 +130,7 @@ function load(){
     });
 
     httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/folders?token="+document.getElementById('token').value,function(callbackThing){
+    
         if(folders == 1){
             folders = callbackThing.folders;  
             let foldersElement = document.getElementById("folders")
@@ -135,7 +141,6 @@ function load(){
                 foldersElement.appendChild(folder);
             }
         for(i = 0; i<  Math.ceil(folders[0].count/500); i++){
-            loaded.innerText = `Laddar...${i} av ${Math.ceil(folders[0].count/500)}`
             httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+`/collection/folders/0/releases?page=${i+1}&per_page=500&token=`+document.getElementById('token').value,function(callback){
                 let newColection = collection.concat(callback.releases);
                 collection = newColection;
