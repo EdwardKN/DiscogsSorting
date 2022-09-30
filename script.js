@@ -107,6 +107,7 @@ function load(){
     httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/fields?token="+document.getElementById('token').value,function(c){
         notes = c.fields;
         collectionTable.innerHTML = "";
+        
 
         addFirstColumn({
             id:"",
@@ -133,6 +134,7 @@ function load(){
                 foldersElement.appendChild(folder);
             }
         for(i = 0; i<  Math.ceil(folders[0].count/500); i++){
+            loaded.innerText = `Laddar...${i} av ${Math.ceil(folders[0].count/500)}`
             httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+`/collection/folders/0/releases?page=${i+1}&per_page=500&token=`+document.getElementById('token').value,function(callback){
                 let newColection = collection.concat(callback.releases);
                 collection = newColection;
@@ -152,7 +154,7 @@ function load(){
 
 const addAllItems = async () => {
     for(i = 0; i < collection.length;i++){
-        await sleep(1)
+        await sleep(5)
         addItems(i)
     }
   }
