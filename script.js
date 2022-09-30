@@ -18,7 +18,7 @@ window.addEventListener("load",function(){
     }else{
         loadSave();
     }
-})
+});
 
 function save(){
     localStorage.setItem("collection", JSON.stringify(collection));
