@@ -578,7 +578,6 @@ function addFirstColumn(lastSearch){
         for(let y = 0;y< i;y++){
             sting += "★"; 
         }
-        console.log(sting)
         folder.text = sting;
         rankSelect.appendChild(folder);
     }
@@ -658,8 +657,6 @@ function getRandomDisc(){
 }
 function randomize(){
     let integer = Math.floor(Math.random() * collection.length);
-
-    let selected = collection[integer];
 
     reloadTable(integer);
 
