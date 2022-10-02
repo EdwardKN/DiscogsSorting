@@ -10,6 +10,9 @@ var selectedFolder = undefined;
 
 var notes = [];
 
+var firstLoad = true;
+
+
 
 
 window.addEventListener("load",function(){
@@ -84,6 +87,7 @@ function httpRequest(url, callback){
 }
 
 function reload(){
+    firstLoad = true;
     notes = [];
     collection = [];
     folders = 1;
@@ -160,7 +164,7 @@ function load(){
 
 const addAllItems = async () => {
     for(i = 0; i < collection.length;i++){
-        await sleep(5)
+        await sleep(1)
         addItems(i)
     }
   }
@@ -240,14 +244,22 @@ function addItems(i){
     column.appendChild(folder);
     column.appendChild(genre);
     column.appendChild(label);
-    
+    for(n = 0; n<notes.length;n++){
+        try{
+
+        if(collection[i].notes[n].field_id === (n+1)){
+        }else{
+            collection[i].notes[collection[i].notes[n].field_id-1].value = collection[i].notes[n].value
+        }
+        }catch(e){
+        }   
+    }
     for(n = 0; n<notes.length;n++){
         let noteText = document.createElement("td");
         try{
         if(collection[i].notes[n].field_id === (n+1)){
             noteText.innerText = collection[i].notes[n].value;
         }else{
-            noteText.innerText = " ";
 
         }
         }catch(e){
@@ -275,6 +287,10 @@ function addItems(i){
     if(i+1 == collection.length){
         loaded.innerText = "";
         save();
+        if(firstLoad === true){
+            firstLoad = false;
+            reloadTable();
+        }
     }
 }
 
