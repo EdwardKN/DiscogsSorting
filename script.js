@@ -530,6 +530,14 @@ function addFirstColumn(lastSearch){
     let genre2 = document.createElement("td");
     let label2 = document.createElement("td");
 
+    ranking2.setAttribute("id","rad2Text")
+    title2.setAttribute("id","rad2Text")
+    artist2.setAttribute("id","rad2Text")
+    year2.setAttribute("id","rad2Text")
+    folder2.setAttribute("id","rad2Text")
+    genre2.setAttribute("id","rad2Text")
+    label2.setAttribute("id","rad2Text")
+
     titleSearch.setAttribute("type","text")
     artistSearch.setAttribute("type","text")
     yearSearch.setAttribute("type","text")
