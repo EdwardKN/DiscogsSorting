@@ -278,67 +278,69 @@ function addItems(i){
     }
 }
 
-// sorting function from w3schools
-function sortTable(n) {
-    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-    table = document.getElementById("collection");
-    switching = true;
-    dir = "asc"; 
+  function compareValues(order, type, path) {
 
-    while (switching) {
-      switching = false;
-      rows = table.rows;
-    if((rows.length-2) < 500){
-        for (i = 2; i < (rows.length - 1); i++) {
-            shouldSwitch = false;
-    
-            x = rows[i].getElementsByTagName("TD")[n];
-            y = rows[i + 1].getElementsByTagName("TD")[n];
-            if(n !== 0){
-                if (dir == "asc") {
-                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                        shouldSwitch= true;
-                        break;
-                    }
-                } else if (dir == "desc") {
-                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                }
-            }else{
-                if (dir == "asc") {
-                    if (Number(x.innerHTML) > Number(y.innerHTML)) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                  }else if (dir == "desc") {
-                    if (Number(x.innerHTML) < Number(y.innerHTML)) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                }
-                
+    return function innerSort(a, b) {
+        
+
+        let comparison = 0;
+        if(type === "string"){
+            const bandA =  Object.byString(a, path).toUpperCase();
+            const bandB = Object.byString(b, path).toUpperCase();
+            
+            if (bandA > bandB) {
+            comparison = 1;
+            } else if (bandA < bandB) {
+            comparison = -1;
             }
-          }
-          if (shouldSwitch) {
-    
-            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-            switching = true;
-            switchcount ++;      
-          } else {
-    
-            if (switchcount == 0 && dir == "asc") {
-              dir = "desc";
-              switching = true;
+        }else{
+            const bandA =  Object.byString(a, path)
+            const bandB = Object.byString(b, path)
+            
+            if (bandA > bandB) {
+            comparison = 1;
+            } else if (bandA < bandB) {
+            comparison = -1;
             }
-          }
+        }
+
+        return comparison * order;
+    }
+    }
+
+  var lastPath = "";
+  var sortOrder = 1;
+  function sortCollection(path,type){
+    if(lastPath === path){
+        sortOrder *= -1;
     }else{
-        alert("Du försöker sortera mer än 500 releaser. Det kommer att spränga programmet. Vänligen sluta med det.")
+        lastPath = path;
+        if(type === "string"){
+            sortOrder = 1;
+        }else{
+            sortOrder = -1;
+        }
     }
-      
-    }
+
+    collection.sort(compareValues(sortOrder,type,path));
+    
+    reloadTable()
   }
+  Object.byString = function(o, s) {
+    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+    s = s.replace(/^\./, '');           // strip a leading dot
+    var a = s.split('.');
+    for (var i = 0, n = a.length; i < n; ++i) {
+        var k = a[i];
+        if (k in o) {
+            o = o[k];
+        } else {
+            return;
+        }
+    }
+    return o;
+}
+
 
 async function reloadTable(onlyShow) {
     let noteStates = [];
@@ -476,13 +478,13 @@ function addFirstColumn(lastSearch){
     genre.setAttribute("id","rad1Text")
     label.setAttribute("id","rad1Text")
 
-    title.setAttribute("onclick","sortTable(3)")
-    artist.setAttribute("onclick","sortTable(2)")
-    ranking.setAttribute("onclick","sortTable(1)")
-    year.setAttribute("onclick","sortTable(4)")
-    folder.setAttribute("onclick","sortTable(6)")
-    genre.setAttribute("onclick","sortTable(7)")
-    label.setAttribute("onclick","sortTable(8)")
+    title.setAttribute("onclick","sortCollection('basic_information.title','string')")
+    artist.setAttribute("onclick","sortCollection('basic_information.artists[0].name','string')")
+    ranking.setAttribute("onclick","sortCollection('rating','number')")
+    year.setAttribute("onclick","sortCollection('basic_information.year')")
+    folder.setAttribute("onclick","sortCollection('folder_id','number')")
+    genre.setAttribute("onclick","sortCollection('basic_information.genres[0]','string')")
+    label.setAttribute("onclick","sortCollection('basic_information.labels[0].name','string')")
     
     column.appendChild(albumCover);
     column.appendChild(ranking);
@@ -497,7 +499,7 @@ function addFirstColumn(lastSearch){
         let noteText = document.createElement("td");
         noteText.innerText = notes[n].name;
         noteText.setAttribute("id","rad1Text")
-        noteText.setAttribute("onclick",`sortTable(${8+n})`)
+        noteText.setAttribute("onclick",`sortCollection('notes[${n}].value','string')`)
 
         column.appendChild(noteText);
     }
