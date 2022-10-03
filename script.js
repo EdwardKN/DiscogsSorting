@@ -243,6 +243,18 @@ function addItems(i){
         })
         
     });
+    if(collection[i].basic_information.styles.length === 0){
+        genre.innerHTML += "Okänt men liknar "
+        collection[i].basic_information.genres.forEach(styles => {
+            genre.innerHTML += styles.link("") + ", "
+            genre.childNodes.forEach(links => {
+                if(links.nodeName === "A"){
+                    links.setAttribute("onmouseup","document.getElementById('genreSearch').value=this.innerText;removeRandomDisc();")
+                }
+            })
+            
+        });
+    }
 
     collection[i].basic_information.labels.forEach(labels => {
         label.innerHTML += labels.name.link("") + ", "
@@ -553,6 +565,8 @@ function addFirstColumn(lastSearch){
     genre.innerText = "Genre";
     label.innerText = "Label";
     date.innerText = "Datum tillagd";
+    
+
 
     albumCover.setAttribute("id","rad1Text")
     ranking.setAttribute("id","rad1Text")
@@ -573,6 +587,8 @@ function addFirstColumn(lastSearch){
     label.setAttribute("onclick","sortCollection('basic_information.labels[0].name','string')")
     date.setAttribute("onclick","sortCollection('date_added','string')")
     
+    albumCover.setAttribute("onclick"," for(let i=2;i< document.getElementById('collection').rows.length;i++){document.getElementById('collection').rows[i].cells[0].classList.toggle('active');document.getElementById('collection').rows[i].cells[0].childNodes[0].classList.toggle('active');}")
+
     column.appendChild(albumCover);
     column.appendChild(ranking);
     column.appendChild(artist);

@@ -3,15 +3,20 @@
   }
   #token{
     width: 40%;
+    font-family:"Courier-new";
+
   }
   #username{
     width: 15%;
+    font-family:"Courier-new";
+
   }
   #idSearch,#artistSearch,#titleSearch,#yearSearch,#originalYearSearch,#folders,#genreSearch,#labelSearch,#noteSearch,#rankSelect,#dateSearch{
     background-color: #E6E6E6;
     border: 0px;
     width: 95%;
-    
+    font-family:"Courier-new";
+
 
   }
   
@@ -51,16 +56,25 @@
 
   td{
     transition:all 1.5s ease-out; 
-
+    font-family:"Courier-new";
+    font-weight:normal;
 
   }
   img.active {
-      transform:scale(4);
+      transform:scale(7);
     }
   td.active{
-    padding: 150px;
+    padding: 320px;
   }
   a:link , a:visited {
     color: black;
     text-decoration: none;  
+  }
+  h3{
+    font-family:"Courier-new";
+  }
+
+  button{
+    font-family:"Courier-new";
+    font-weight:bold;
   }
