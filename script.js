@@ -66,7 +66,7 @@ function loadSave(){
     });
     value = JSON.parse(localStorage.getItem("worth"));
 
-    document.getElementById("worth").innerText ='Värde: - Min: ' + value.minimum.split(".")[0].replace(",",".") + ' -  Med: ' + value.median.split(".")[0].replace(",",".") + ' -  Max: ' + value.maximum.split(".")[0].replace(",",".");
+    document.getElementById("worth").innerText ='Värde: --- Min: ' + value.minimum.split(".")[0].replace(",",".") + ' ---  Med: ' + value.median.split(".")[0].replace(",",".") + ' ---  Max: ' + value.maximum.split(".")[0].replace(",",".") + ' ---';
 
     reloadTable();
 
@@ -143,7 +143,7 @@ function load(){
     });
     httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/value?token="+document.getElementById('token').value,function(c){
         value = c;
-        document.getElementById("worth").innerText ='Värde: - Min: ' + value.minimum.split(".")[0].replace(",",".") + ' -  Med: ' + value.median.split(".")[0].replace(",",".") + ' -  Max: ' + value.maximum.split(".")[0].replace(",",".");
+        document.getElementById("worth").innerText ='Värde: --- Min: ' + value.minimum.split(".")[0].replace(",",".") + ' ---  Med: ' + value.median.split(".")[0].replace(",",".") + ' ---  Max: ' + value.maximum.split(".")[0].replace(",",".") + ' ---';
     });
 
 
@@ -304,9 +304,11 @@ function addItems(i){
     if(i+1 == collection.length){
         loaded.innerText = "";
         save();
-        if(firstLoad === true){
+        if(firstLoad == true){
             firstLoad = false;
-            reloadTable();
+            setTimeout(() => {
+                reloadTable();
+            }, 1);
         }
     }
 }
