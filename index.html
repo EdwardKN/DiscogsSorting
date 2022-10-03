@@ -5,77 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Discogs Collection</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="/favicon.png"/>
 
-    <style>
-        
-
-        #username,#token{
-          border-color: black;
-        }
-        #token{
-          width: 40%;
-        }
-        #username{
-          width: 15%;
-        }
-        #idSearch,#artistSearch,#titleSearch,#yearSearch,#originalYearSearch,#folders,#genreSearch,#labelSearch,#noteSearch,#rankSelect,#dateSearch{
-          background-color: #E6E6E6;
-          border: 0px;
-          width: 95%;
-          
-
-        }
-        
-        #rad1Text{
-          background-color: #E6E6E6;
-          border: 0px;
-          width: auto;
-          position: sticky;
-          top: 0;
-        }
-
-        
-        table { 
-          table-layout: auto;
-          width: 100%;    
-        }
-        
-
-        .search{
-          background-color: #E6E6E6;
-          border: 0px;
-          width: 95%;
-
-        }
-        tr:nth-child(even) {background-color: #E6E6E6;}
-
-        img {
-          cursor:pointer;
-
-          user-select: none;
-          -moz-user-select: none;
-          -webkit-user-drag: none;
-          -webkit-user-select: none;
-          -ms-user-select: none;            
-          transition:all 1.5s ease-out; 
-        }
-
-        td{
-          transition:all 1.5s ease-out; 
-
-        }
-        img.active {
-            transform:scale(4);
-          }
-        td.active{
-          padding: 150px;
-        }
-        
-    </style>
-
-
-</head>
+  </head>
 <body>
   
   <button id="reload" type="button" onmouseup="reload()" style="width:200px;height:30px;">Refresh</button>

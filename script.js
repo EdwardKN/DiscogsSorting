@@ -190,16 +190,20 @@ const sleep = (time) => {
 function addItems(i){
     let column = document.createElement("tr");
     let id = document.createElement("td");
-    let ranking = document.createElement("td");
+    let ranking = document.createElement("a");
+    let ranking2 = document.createElement("td");
     let title = document.createElement("a");
     let title2 = document.createElement("td");
     let artist = document.createElement("a");
     let artist2 = document.createElement("td");
-    let year = document.createElement("td");
-    let folder = document.createElement("td");
+    let year = document.createElement("a");
+    let year2 = document.createElement("td");
+    let folder = document.createElement("a");
+    let folder2 = document.createElement("td");
     let genre = document.createElement("td");
     let label = document.createElement("td");
-    let date = document.createElement("td");
+    let date = document.createElement("a");
+    let date2 = document.createElement("td");
 
     let idImage = document.createElement("img")
     idImage.setAttribute("onclick","this.classList.toggle('active');this.parentNode.classList.toggle('active');")
@@ -220,6 +224,7 @@ function addItems(i){
     } else{
         year.innerText = collection[i].basic_information.year;
     }
+
     for(g = 0;g<folders.length;g++){
         if(collection[i].folder_id === folders[g].id){
             folder.innerText = folders[g].name;
@@ -229,38 +234,73 @@ function addItems(i){
     }
     collection[i].basic_information.labelThing = "";
 
-    genre.innerText = collection[i].basic_information.styles;
+    collection[i].basic_information.styles.forEach(styles => {
+        genre.innerHTML += styles.link("") + ", "
+        genre.childNodes.forEach(links => {
+            if(links.nodeName === "A"){
+                links.setAttribute("onmouseup","document.getElementById('genreSearch').value=this.innerText;removeRandomDisc();")
+            }
+        })
+        
+    });
 
-    for(g = 0;g<collection[i].basic_information.labels.length;g++){
-        collection[i].basic_information.labelThing += collection[i].basic_information.labels[g].name;
+    collection[i].basic_information.labels.forEach(labels => {
+        label.innerHTML += labels.name.link("") + ", "
+        collection[i].basic_information.labelThing += labels.name
+        label.childNodes.forEach(links => {
+            if(links.nodeName === "A"){
+                links.setAttribute("onmouseup","document.getElementById('labelSearch').value=this.innerText;removeRandomDisc();")
+            }
+        })
+        
+    });
 
-    }
-
-    label.innerText = collection[i].basic_information.labelThing;
     date.innerText = collection[i].date_added.split("T")[0];
 
     title.setAttribute("href",  "https://www.discogs.com/release/"+collection[i].basic_information.id);
     title.setAttribute("target","_blank")
     artist.setAttribute("href",  "https://www.discogs.com/artist/"+collection[i].basic_information.artists[0].id);
     artist.setAttribute("target","_blank")
+    ranking.setAttribute("href",  "https://www.discogs.com/master/"+collection[i].basic_information.master_id);
+    ranking.setAttribute("target","_blank")
+    year.setAttribute("href",  "");
+    year.setAttribute("target","_blank")
+    folder.setAttribute("href",  "");
+    folder.setAttribute("target","_blank")
+    date.setAttribute("href",  "");
+    date.setAttribute("target","_blank")
+
+    year.setAttribute("onmouseup","document.getElementById('yearSearch').value=this.innerText;removeRandomDisc();")
+    date.setAttribute("onmouseup","document.getElementById('dateSearch').value=this.innerText;removeRandomDisc();")
+    folder2.setAttribute("onmouseup","folders.forEach(foldernow => {if((foldernow.name) == this.innerText){document.getElementById('folders').value = JSON.stringify(foldernow.id);}});removeRandomDisc();")
+
+    
 
     title2.appendChild(title);
 
     artist2.appendChild(artist);
+
+    ranking2.appendChild(ranking);
+    
+    year2.appendChild(year);
+
+    folder2.appendChild(folder);
+
+    date2.appendChild(date);
 
     id.appendChild(idImage);
 
 
 
     column.appendChild(id);
-    column.appendChild(ranking);
+    column.appendChild(ranking2);
     column.appendChild(artist2);
     column.appendChild(title2);
-    column.appendChild(year);
-    column.appendChild(folder);
+    column.appendChild(year2);
+    column.appendChild(folder2);
     column.appendChild(genre);
     column.appendChild(label);
-    column.appendChild(date);
+    column.appendChild(date2);
     for(n = 0; n<notes.length;n++){
         try{
 
@@ -272,7 +312,8 @@ function addItems(i){
         }   
     }
     for(n = 0; n<notes.length;n++){
-        let noteText = document.createElement("td");
+        let noteText = document.createElement("a");
+        let noteText2 = document.createElement("td");
         try{
         if(collection[i].notes[n].field_id === (n+1)){
             noteText.innerText = collection[i].notes[n].value;
@@ -288,14 +329,19 @@ function addItems(i){
                 }
             }catch(e){
                 noteText.innerText = " ";
-                collection[i].notes = []
+                collection[i].notes = [];
             
             }
 
             
         }   
+        noteText.setAttribute("href",  "");
+        noteText.setAttribute("target","_blank")
+        noteText.setAttribute("onmouseup",`document.getElementById('noteSearch'+${n}).value=this.innerText;removeRandomDisc();`)
 
-        column.appendChild(noteText);
+        noteText2.appendChild(noteText);
+
+        column.appendChild(noteText2);
     
     }
 
