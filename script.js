@@ -12,6 +12,8 @@ var notes = [];
 
 var firstLoad = true;
 
+var value;
+
 
 
 
@@ -29,9 +31,10 @@ function save(){
     localStorage.setItem("username",JSON.stringify(document.getElementById("username").value))
     localStorage.setItem("token",JSON.stringify(document.getElementById("token").value))
     localStorage.setItem("notes",JSON.stringify(notes))
+    localStorage.setItem("worth",JSON.stringify(value))
 }
 function loadSave(){
-    
+
     collection = JSON.parse(localStorage.getItem("collection"));
     folders = JSON.parse(localStorage.getItem("folders"));
     document.getElementById("username").value = JSON.parse(localStorage.getItem("username"));
@@ -61,6 +64,9 @@ function loadSave(){
         rankSelect:"Alla",
         date:""
     });
+    value = JSON.parse(localStorage.getItem("worth"));
+
+    document.getElementById("worth").innerText ='Värde: - Min: ' + value.minimum + ' -  Med: ' + value.median + ' -  Max: ' + value.maximum;
 
     reloadTable();
 
@@ -135,6 +141,11 @@ function load(){
             date:""
         });
     });
+    httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/value?token="+document.getElementById('token').value,function(c){
+        value = c;
+        document.getElementById("worth").innerText ='Värde: - Min: ' + value.minimum + ' -  Med: ' + value.median + ' -  Max: ' + value.maximum;
+    });
+
 
     httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/folders?token="+document.getElementById('token').value,function(callbackThing){
     
