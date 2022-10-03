@@ -416,6 +416,7 @@ async function reloadTable(onlyShow) {
             if(collection[i].basic_information.title.toLowerCase().includes(document.getElementById("titleSearch").value.toLowerCase()) &&
                 collection[i].basic_information.artists[0].name.toLowerCase().includes(document.getElementById("artistSearch").value.toLowerCase()) && 
                 JSON.stringify(collection[i].basic_information.year).startsWith(document.getElementById("yearSearch").value) &&
+                (collection[i].date_added).startsWith(document.getElementById("dateSearch").value) &&
                 JSON.stringify(collection[i].basic_information.styles).toLowerCase().includes(document.getElementById("genreSearch").value.toLowerCase()
                 )
             ){
