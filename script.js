@@ -378,8 +378,19 @@ function addItems(i){
 
         let comparison = 0;
         if(type === "string"){
-            const bandA =  Object.byString(a, path).toUpperCase();
-            const bandB = Object.byString(b, path).toUpperCase();
+            var bandA;
+            var bandB;
+            if(Object.byString(a, path) === undefined){
+                bandA = "ööö"
+            }else{
+                bandA =  Object.byString(a, path).toUpperCase();
+            }
+            if(Object.byString(b, path) === undefined){
+                bandB = "ööö"
+            }else{
+                bandB = Object.byString(b, path).toUpperCase();
+            }
+
             
             if (bandA > bandB) {
             comparison = 1;
@@ -583,7 +594,7 @@ function addFirstColumn(lastSearch){
     ranking.setAttribute("onclick","sortCollection('rating','number')")
     year.setAttribute("onclick","sortCollection('basic_information.year')")
     folder.setAttribute("onclick","sortCollection('folder_id','number')")
-    genre.setAttribute("onclick","sortCollection('basic_information.genres[0]','string')")
+    genre.setAttribute("onclick","sortCollection('basic_information.styles[0]','string')")
     label.setAttribute("onclick","sortCollection('basic_information.labels[0].name','string')")
     date.setAttribute("onclick","sortCollection('date_added','string')")
     
