@@ -58,7 +58,8 @@ function loadSave(){
         folder:"",
         genre:"",
         notes:tmpNotes,
-        rankSelect:"Alla"
+        rankSelect:"Alla",
+        date:""
     });
 
     reloadTable();
@@ -102,7 +103,8 @@ function reload(){
         folder:"",
         genre:"",
         notes:undefined,
-        rankSelect:"Alla"
+        rankSelect:"Alla",
+        date:""
     });
     localStorage.setItem("username",JSON.stringify(document.getElementById("username").value))
     localStorage.setItem("token",JSON.stringify(document.getElementById("token").value))
@@ -129,7 +131,8 @@ function load(){
             genre:"",
             label:"",
             notes:undefined,
-            rankSelect:"Alla"
+            rankSelect:"Alla",
+            date:""
         });
     });
 
@@ -185,6 +188,7 @@ function addItems(i){
     let folder = document.createElement("td");
     let genre = document.createElement("td");
     let label = document.createElement("td");
+    let date = document.createElement("td");
 
     let idImage = document.createElement("img")
     idImage.setAttribute("onclick","this.classList.toggle('active');")
@@ -222,6 +226,7 @@ function addItems(i){
     }
 
     label.innerText = collection[i].basic_information.labelThing;
+    date.innerText = collection[i].date_added.split("T")[0];
 
     title.setAttribute("href",  "https://www.discogs.com/release/"+collection[i].basic_information.id);
     title.setAttribute("target","_blank")
@@ -244,6 +249,7 @@ function addItems(i){
     column.appendChild(folder);
     column.appendChild(genre);
     column.appendChild(label);
+    column.appendChild(date);
     for(n = 0; n<notes.length;n++){
         try{
 
@@ -379,7 +385,8 @@ async function reloadTable(onlyShow) {
         genre:document.getElementById("genreSearch").value,
         label:document.getElementById("labelSearch").value,
         notes:noteStates,
-        rankSelect: document.getElementById("rankSelect").value
+        rankSelect: document.getElementById("rankSelect").value,
+        date: document.getElementById("dateSearch").value
     }
 
     collectionTable.innerHTML = "";
@@ -473,6 +480,7 @@ function addFirstColumn(lastSearch){
     let folder = document.createElement("td");
     let genre = document.createElement("td");
     let label = document.createElement("td");
+    let date = document.createElement("td");
 
 
 
@@ -484,6 +492,7 @@ function addFirstColumn(lastSearch){
     folder.innerText = "Mapp";
     genre.innerText = "Genre";
     label.innerText = "Label";
+    date.innerText = "Datum tillagd";
 
     albumCover.setAttribute("id","rad1Text")
     ranking.setAttribute("id","rad1Text")
@@ -493,6 +502,7 @@ function addFirstColumn(lastSearch){
     folder.setAttribute("id","rad1Text")
     genre.setAttribute("id","rad1Text")
     label.setAttribute("id","rad1Text")
+    date.setAttribute("id","rad1Text")
 
     title.setAttribute("onclick","sortCollection('basic_information.title','string')")
     artist.setAttribute("onclick","sortCollection('basic_information.artists[0].name','string')")
@@ -501,6 +511,7 @@ function addFirstColumn(lastSearch){
     folder.setAttribute("onclick","sortCollection('folder_id','number')")
     genre.setAttribute("onclick","sortCollection('basic_information.genres[0]','string')")
     label.setAttribute("onclick","sortCollection('basic_information.labels[0].name','string')")
+    date.setAttribute("onclick","sortCollection('date_added','string')")
     
     column.appendChild(albumCover);
     column.appendChild(ranking);
@@ -510,6 +521,7 @@ function addFirstColumn(lastSearch){
     column.appendChild(folder);
     column.appendChild(genre);
     column.appendChild(label);
+    column.appendChild(date);
 
     for(n = 0; n<notes.length;n++){
         let noteText = document.createElement("td");
@@ -535,6 +547,7 @@ function addFirstColumn(lastSearch){
     let rankSelect = document.createElement("select");
     let genreSearch = document.createElement("input");
     let labelSearch = document.createElement("input");
+    let dateSearch = document.createElement("input");
 
     let albumCover2 = document.createElement("td");
     let ranking2 = document.createElement("td");
@@ -545,6 +558,7 @@ function addFirstColumn(lastSearch){
     let folder2 = document.createElement("td");
     let genre2 = document.createElement("td");
     let label2 = document.createElement("td");
+    let date2 = document.createElement("td");
 
     ranking2.setAttribute("id","rad2Text")
     title2.setAttribute("id","rad2Text")
@@ -553,12 +567,14 @@ function addFirstColumn(lastSearch){
     folder2.setAttribute("id","rad2Text")
     genre2.setAttribute("id","rad2Text")
     label2.setAttribute("id","rad2Text")
+    date2.setAttribute("id","rad2Text")
 
     titleSearch.setAttribute("type","text")
     artistSearch.setAttribute("type","text")
     yearSearch.setAttribute("type","text")
     genreSearch.setAttribute("type","text")
     labelSearch.setAttribute("type","text")
+    dateSearch.setAttribute("type","text")
 
     titleSearch.setAttribute("id","titleSearch")
     artistSearch.setAttribute("id","artistSearch")
@@ -567,6 +583,7 @@ function addFirstColumn(lastSearch){
     rankSelect.setAttribute("id","rankSelect")
     genreSearch.setAttribute("id","genreSearch")
     labelSearch.setAttribute("id","labelSearch")
+    dateSearch.setAttribute("id","dateSearch")
 
     titleSearch.setAttribute("onchange","removeRandomDisc()")
     artistSearch.setAttribute("onchange","removeRandomDisc()")
@@ -575,12 +592,14 @@ function addFirstColumn(lastSearch){
     yearSearch.setAttribute("onchange","removeRandomDisc()")
     genreSearch.setAttribute("onchange","removeRandomDisc()")
     labelSearch.setAttribute("onchange","removeRandomDisc()")
+    dateSearch.setAttribute("onchange","removeRandomDisc()")
 
     titleSearch.setAttribute("placeholder","Sök")
     artistSearch.setAttribute("placeholder","Sök")
     yearSearch.setAttribute("placeholder","Sök")
     genreSearch.setAttribute("placeholder","Sök")
     labelSearch.setAttribute("placeholder","Sök")
+    dateSearch.setAttribute("placeholder","Sök")
 
     titleSearch.value = lastSearch.title
     artistSearch.value = lastSearch.artist
@@ -588,6 +607,7 @@ function addFirstColumn(lastSearch){
     genreSearch.value = lastSearch.genre
 
     labelSearch.value = lastSearch.label
+    dateSearch.value = lastSearch.date
 
     if(lastSearch.label == undefined){
         labelSearch.value = "";
@@ -626,6 +646,7 @@ function addFirstColumn(lastSearch){
     ranking2.appendChild(rankSelect);
     genre2.appendChild(genreSearch);
     label2.appendChild(labelSearch);
+    date2.appendChild(dateSearch);
 
     column2.appendChild(albumCover2);
     column2.appendChild(ranking2);
@@ -635,6 +656,7 @@ function addFirstColumn(lastSearch){
     column2.appendChild(folder2);
     column2.appendChild(genre2);
     column2.appendChild(label2);
+    column2.appendChild(date2);
 
     for(n = 0; n<notes.length;n++){
         let noteSearch;
