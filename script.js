@@ -202,7 +202,7 @@ function addItems(i){
     let date = document.createElement("td");
 
     let idImage = document.createElement("img")
-    idImage.setAttribute("onclick","this.classList.toggle('active');")
+    idImage.setAttribute("onclick","this.classList.toggle('active');this.parentNode.classList.toggle('active');")
 
     idImage.src = collection[i].basic_information.cover_image;
     idImage.style.height = '100px';
