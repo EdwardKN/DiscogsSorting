@@ -241,6 +241,15 @@ function addItems(i){
                 links.setAttribute("onmouseup","document.getElementById('genreSearch').value=this.innerText;removeRandomDisc();")
             }
         })
+        collection[i].basic_information.genres.forEach(styles => {
+            genre.innerHTML += styles.link("") + ", "
+            genre.childNodes.forEach(links => {
+                if(links.nodeName === "A"){
+                    links.setAttribute("onmouseup","document.getElementById('genreSearch').value=this.innerText;removeRandomDisc();")
+                }
+            })
+            
+        });
         
     });
     if(collection[i].basic_information.styles.length === 0){
@@ -486,7 +495,8 @@ async function reloadTable(onlyShow) {
                 collection[i].basic_information.artists[0].name.toLowerCase().includes(document.getElementById("artistSearch").value.toLowerCase()) && 
                 JSON.stringify(collection[i].basic_information.year).startsWith(document.getElementById("yearSearch").value) &&
                 (collection[i].date_added).startsWith(document.getElementById("dateSearch").value) &&
-                JSON.stringify(collection[i].basic_information.styles).toLowerCase().includes(document.getElementById("genreSearch").value.toLowerCase()
+                JSON.stringify(collection[i].basic_information.styles).toLowerCase().includes(document.getElementById("genreSearch").value.toLowerCase()) ||
+                JSON.stringify(collection[i].basic_information.genres).toLowerCase().includes(document.getElementById("genreSearch").value.toLowerCase()
                 )
             ){
                 try{
