@@ -253,7 +253,6 @@ function addItems(i){
         
     });
     if(collection[i].basic_information.styles.length === 0){
-        genre.innerHTML += "Okänt men liknar "
         collection[i].basic_information.genres.forEach(styles => {
             genre.innerHTML += styles.link("") + ", "
             genre.childNodes.forEach(links => {
