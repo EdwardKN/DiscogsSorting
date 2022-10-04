@@ -431,8 +431,8 @@ function addItems(i){
     reloadTable()
   }
   Object.byString = function(o, s) {
-    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-    s = s.replace(/^\./, '');           // strip a leading dot
+    s = s.replace(/\[(\w+)\]/g, '.$1');
+    s = s.replace(/^\./, '');           
     var a = s.split('.');
     for (var i = 0, n = a.length; i < n; ++i) {
         var k = a[i];
@@ -483,12 +483,12 @@ async function reloadTable(onlyShow) {
                 var notesGood = true;
 
             if(collection[i].basic_information.title.toLowerCase().includes(document.getElementById("titleSearch").value.toLowerCase()) &&
-                collection[i].basic_information.artists[0].name.toLowerCase().includes(document.getElementById("artistSearch").value.toLowerCase()) && 
                 JSON.stringify(collection[i].basic_information.year).startsWith(document.getElementById("yearSearch").value) &&
                 (collection[i].date_added).startsWith(document.getElementById("dateSearch").value) &&
                 JSON.stringify(collection[i].basic_information.styles).toLowerCase().includes(document.getElementById("genreSearch").value.toLowerCase()
                 )
             ){
+                if(collection[i].basic_information.artists[0].name.toLowerCase().includes(document.getElementById("artistSearch").value.toLowerCase()))
                 try{
                     if(collection[i].basic_information.labelThing.toLowerCase().includes(document.getElementById("labelSearch").value.toLowerCase())){
                         for(x=0;x<notes.length;x++){
@@ -539,6 +539,7 @@ async function reloadTable(onlyShow) {
                 }catch(e){
                 }
             }
+            
         }else{
             notesGood = false;
         }
