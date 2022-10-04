@@ -389,12 +389,20 @@ function addItems(i){
             var bandA;
             var bandB;
             if(Object.byString(a, path) === undefined){
-                bandA = "ööö"
+                if(path === "basic_information.styles[0]"){
+                    bandA =Object.byString(a, "basic_information.genres[0]")
+                }else{
+                    bandA = "ööö"
+                }
             }else{
                 bandA =  Object.byString(a, path).toUpperCase();
             }
             if(Object.byString(b, path) === undefined){
-                bandB = "ööö"
+                if(path === "basic_information.styles[0]"){
+                    bandB =Object.byString(a, "basic_information.genres[0]")
+                }else{
+                    bandB = "ööö"
+                }
             }else{
                 bandB = Object.byString(b, path).toUpperCase();
             }
