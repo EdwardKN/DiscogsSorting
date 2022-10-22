@@ -210,11 +210,16 @@ function addItems(i){
 
     let idImage = document.createElement("img")
     idImage.setAttribute("onclick","this.classList.toggle('active');this.parentNode.classList.toggle('active');")
-    idImage.addEventListener("load", function(){
-        inladdade_bilder+= 1;
-        loaded.innerText = inladdade_bilder + " / " + collection.length;
 
-    })
+
+    idImage.onload = function(){
+        inladdade_bilder+= 1;
+        if(inladdade_bilder >= collection.length){
+            inladdade_bilder = collection.length;
+        }
+        loaded.innerText = inladdade_bilder + " / " + collection.length;
+    }
+
     idImage.src = collection[i].basic_information.cover_image;
     idImage.style.height = '100px';
     idImage.style.width = '100px';
@@ -469,6 +474,8 @@ function addItems(i){
 
 
 async function reloadTable(onlyShow) {
+    inladdade_bilder = 0;
+
     let noteStates = [];
     for(let x=0;x<notes.length;x++){
         noteStates.push(document.getElementById("noteSearch"+x).value)
@@ -546,7 +553,6 @@ async function reloadTable(onlyShow) {
 
                                 if(onlyShow === i){
                                     i = collection.length;
-                                    inladdade_bilder = 0;
                                     addItems(onlyShow)
                                     onlyShowTrue = true;
                                 } else{
@@ -555,7 +561,6 @@ async function reloadTable(onlyShow) {
                                 }
                                 
                             }else{
-                                inladdade_bilder = 0;
                                 addItems(i)
                             }
                             
