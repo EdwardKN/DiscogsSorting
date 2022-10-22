@@ -14,6 +14,8 @@ var firstLoad = true;
 
 var value;
 
+var inladdade_bilder = 0;
+
 
 
 
@@ -177,6 +179,7 @@ function load(){
 }
 
 const addAllItems = async () => {
+    inladdade_bilder = 0;
     for(i = 0; i < collection.length;i++){
         await sleep(1)
         addItems(i)
@@ -207,7 +210,11 @@ function addItems(i){
 
     let idImage = document.createElement("img")
     idImage.setAttribute("onclick","this.classList.toggle('active');this.parentNode.classList.toggle('active');")
+    idImage.addEventListener("load", function(){
+        inladdade_bilder+= 1;
+        loaded.innerText = inladdade_bilder + " / " + collection.length;
 
+    })
     idImage.src = collection[i].basic_information.cover_image;
     idImage.style.height = '100px';
     idImage.style.width = '100px';
@@ -368,7 +375,6 @@ function addItems(i){
     collectionTable.appendChild(column);
 
     if(i+1 == collection.length){
-        loaded.innerText = "";
         save();
         if(firstLoad == true){
             firstLoad = false;
@@ -498,13 +504,14 @@ async function reloadTable(onlyShow) {
             if(JSON.stringify(collection[i].rating) === document.getElementById("rankSelect").value || document.getElementById("rankSelect").value === "Alla"){
                 var notesGood = true;
 
-            if(collection[i].basic_information.title.toLowerCase().includes(document.getElementById("titleSearch").value.toLowerCase()) &&
-                JSON.stringify(collection[i].basic_information.year).startsWith(document.getElementById("yearSearch").value) &&
+                if(JSON.stringify(collection[i].basic_information.year).startsWith(document.getElementById("yearSearch").value) &&
                 (collection[i].date_added).startsWith(document.getElementById("dateSearch").value) &&
                 JSON.stringify(collection[i].basic_information.styles).toLowerCase().includes(document.getElementById("genreSearch").value.toLowerCase()) ||
                 JSON.stringify(collection[i].basic_information.genres).toLowerCase().includes(document.getElementById("genreSearch").value.toLowerCase()
                 )
             ){
+                if(collection[i].basic_information.title.toLowerCase().includes(document.getElementById("titleSearch").value.toLowerCase()) === true){
+
                 if(collection[i].basic_information.artists[0].name.toLowerCase().includes(document.getElementById("artistSearch").value.toLowerCase()))
                 try{
                     if(collection[i].basic_information.labelThing.toLowerCase().includes(document.getElementById("labelSearch").value.toLowerCase())){
@@ -539,6 +546,7 @@ async function reloadTable(onlyShow) {
 
                                 if(onlyShow === i){
                                     i = collection.length;
+                                    inladdade_bilder = 0;
                                     addItems(onlyShow)
                                     onlyShowTrue = true;
                                 } else{
@@ -547,6 +555,7 @@ async function reloadTable(onlyShow) {
                                 }
                                 
                             }else{
+                                inladdade_bilder = 0;
                                 addItems(i)
                             }
                             
@@ -556,6 +565,7 @@ async function reloadTable(onlyShow) {
                 }catch(e){
                 }
             }
+        }
             
         }else{
             notesGood = false;
